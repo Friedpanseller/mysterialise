@@ -1,0 +1,27 @@
+{
+  "name": "mysterialise",
+  "version": "1.0.0",
+  "description": "Serialise and De-Serialise JavaScript data types including \"Array\" | \"Date\" | \"RegExp\" | \"Buffer\" | \"string\" | \"number\" | \"boolean\" | \"object\" | \"null\" | \"undefined\" data types",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Friedpanseller/mysterialise.git"
+  },
+  "keywords": [
+    "serialise",
+    "deserialise",
+    "unserialise"
+  ],
+  "author": "Friedpanseller",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Friedpanseller/mysterialise/issues"
+  },
+  "homepage": "https://github.com/Friedpanseller/mysterialise#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.16"
+  }
+}

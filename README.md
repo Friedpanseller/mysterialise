@@ -1,2 +1,2 @@
-# mystery
-Mystery NPM Package
+# Mysterialise
+Mysterious Serialisation of JavaScript data

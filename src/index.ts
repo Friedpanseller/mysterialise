@@ -1,70 +1,70 @@
 export type VariableType = "Array" | "Date" | "RegExp" | "Buffer" | "string" | "number" | "boolean" | "object" | "null" | "undefined";
 
 export type MysteryType = {
-  "type": VariableType,
-  "data": any,
-  "name"?: string | null
+  "t": VariableType,
+  "d": any,
+  "n"?: string | null
 };
 
 function serialise(variable: any, name: string | null): MysteryType {
   if (variable === null) {
     return {
-      "type": "null",
-      "data": null,
+      "t": "null",
+      "d": null,
       ...(name ? { name: name } : {})
     };
   } else if (variable === undefined) {
     return {
-      "type": "undefined",
-      "data": undefined,
+      "t": "undefined",
+      "d": undefined,
       ...(name ? { name: name } : {})
     };
   } else if (variable.constructor === Array) {
     return {
-      "type": "Array",
-      "data": variable.map(v => serialise(v, null)),
+      "t": "Array",
+      "d": variable.map(v => serialise(v, null)),
       ...(name ? { name: name } : {})
     };
   } else if (variable.constructor === Date) {
     return {
-      "type": "Date",
-      "data": variable.toISOString(),
+      "t": "Date",
+      "d": variable.toISOString(),
       ...(name ? { name: name } : {})
     }
   } else if (variable.constructor === RegExp) {
     return {
-      "type": "RegExp",
-      "data": variable.toString(),
+      "t": "RegExp",
+      "d": variable.toString(),
       ...(name ? { name: name } : {})
     }
   } else if (variable.constructor === Buffer) {
     return {
-      "type": "Buffer",
-      "data": JSON.parse(JSON.stringify(variable)).data,
+      "t": "Buffer",
+      "d": JSON.parse(JSON.stringify(variable)).data,
       ...(name ? { name: name } : {})
     }
   } else if (typeof variable === "string") {
     return {
-      "type": "string",
-      "data": variable,
+      "t": "string",
+      "d": variable,
       ...(name ? { name: name } : {})
     }
   } else if (typeof variable === "number") {
     return {
-      "type": "number",
-      "data": variable,
+      "t": "number",
+      "d": variable,
       ...(name ? { name: name } : {})
     }
   } else if (typeof variable === "boolean") {
     return {
-      "type": "boolean",
-      "data": variable,
+      "t": "boolean",
+      "d": variable,
       ...(name ? { name: name } : {})
     }
   } else if (typeof variable === "object") {
     return {
-      "type": "object",
-      "data": Object.entries(variable).map(
+      "t": "object",
+      "d": Object.entries(variable).map(
         ([name, data]) => serialise(data, name)
       ),
       ...(name ? { name: name } : {})
@@ -74,35 +74,35 @@ function serialise(variable: any, name: string | null): MysteryType {
 }
 
 function deserialise(variable: MysteryType) {
-  if (variable.type === "null") {
+  if (variable["t"] === "null") {
     return null;
-  } else if (variable.type === "undefined") {
+  } else if (variable["t"] === "undefined") {
     return undefined;
-  } else if (variable.type === "Array") {
-    return variable.data.map((d: MysteryType) => deserialise(d));
-  } else if (variable.type === "Date") {
-    return new Date(variable.data);
-  } else if (variable.type === "RegExp") {
-    const parts = /\/(.*)\/(.*)/.exec(variable.data);
+  } else if (variable["t"] === "Array") {
+    return variable["d"].map((d: MysteryType) => deserialise(d));
+  } else if (variable["t"] === "Date") {
+    return new Date(variable["d"]);
+  } else if (variable["t"] === "RegExp") {
+    const parts = /\/(.*)\/(.*)/.exec(variable["d"]);
     if (parts) {
       return new RegExp(parts[1], parts[2]);
     } else {
       return null;
     }
-  } else if (variable.type === "Buffer") {
-    return Buffer.from(variable.data);
-  } else if (variable.type === "string") {
-    return variable.data;
-  } else if (variable.type === "number") {
-    return variable.data;
-  } else if (variable.type === "boolean") {
-    return variable.data;
-  } else if (variable.type === "object") {
+  } else if (variable["t"] === "Buffer") {
+    return Buffer.from(variable["d"]);
+  } else if (variable["t"] === "string") {
+    return variable["d"];
+  } else if (variable["t"] === "number") {
+    return variable["d"];
+  } else if (variable["t"] === "boolean") {
+    return variable["d"];
+  } else if (variable["t"] === "object") {
     let obj = {};
-    variable.data.forEach((v: MysteryType) => {
+    variable["d"].forEach((v: MysteryType) => {
       if (v !== null && v !== undefined) {
-        if (v.name) {
-          obj = { ...obj, [v.name]: deserialise(v) };
+        if (v["n"]) {
+          obj = { ...obj, [v["n"]]: deserialise(v) };
         }
       }
     })

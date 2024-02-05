@@ -1,6 +1,6 @@
 {
   "name": "mysterialise",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Serialise and De-Serialise JavaScript data types including \"Array\" | \"Date\" | \"RegExp\" | \"Buffer\" | \"string\" | \"number\" | \"boolean\" | \"object\" | \"null\" | \"undefined\" data types",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

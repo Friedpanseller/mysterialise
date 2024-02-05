@@ -1,129 +1,129 @@
 export type VariableType =
-  // Array
+  // Array 1
   "A" |
-  // Date
+  // Date 2
   "D" |
-  // RegExp 
+  // RegExp 3
   "R" |
-  // Buffer
+  // Buffer 4
   "B" |
-  // string
+  // string 5
   "s" |
-  // number
+  // number 6
   "n" |
-  // boolean
+  // boolean 7
   "b" |
-  // object
+  // object 8
   "o" |
-  // null
+  // null 9
   "l" |
-  // undefined 
+  // undefined 0
   "u"
   ;
 
 export type MysteryType = {
-  "t": VariableType,
-  "d": any,
-  "n"?: string | null
+  1: VariableType,  // Type
+  2: any,           // Data
+  3?: string | null // Name
 };
 
 function serialise(variable: any, name: string | null): MysteryType {
   if (variable === null) {
     return {
-      "t": "l",
-      "d": null,
-      ...(name ? { n: name } : {})
+      1: "l",
+      2: null,
+      ...(name ? { 3: name } : {})
     };
   } else if (variable === undefined) {
     return {
-      "t": "u",
-      "d": undefined,
-      ...(name ? { n: name } : {})
+      1: "u",
+      2: undefined,
+      ...(name ? { 3: name } : {})
     };
   } else if (variable.constructor === Array) {
     return {
-      "t": "A",
-      "d": variable.map(v => serialise(v, null)),
-      ...(name ? { n: name } : {})
+      1: "A",
+      2: variable.map(v => serialise(v, null)),
+      ...(name ? { 3: name } : {})
     };
   } else if (variable.constructor === Date) {
     return {
-      "t": "D",
-      "d": variable.toISOString(),
-      ...(name ? { n: name } : {})
+      1: "D",
+      2: variable.toISOString(),
+      ...(name ? { 3: name } : {})
     }
   } else if (variable.constructor === RegExp) {
     return {
-      "t": "R",
-      "d": variable.toString(),
-      ...(name ? { n: name } : {})
+      1: "R",
+      2: variable.toString(),
+      ...(name ? { 3: name } : {})
     }
   } else if (variable.constructor === Buffer) {
     return {
-      "t": "B",
-      "d": JSON.parse(JSON.stringify(variable)).data,
-      ...(name ? { n: name } : {})
+      1: "B",
+      2: JSON.parse(JSON.stringify(variable)).data,
+      ...(name ? { 3: name } : {})
     }
   } else if (typeof variable === "string") {
     return {
-      "t": "s",
-      "d": variable,
-      ...(name ? { n: name } : {})
+      1: "s",
+      2: variable,
+      ...(name ? { 3: name } : {})
     }
   } else if (typeof variable === "number") {
     return {
-      "t": "n",
-      "d": variable,
-      ...(name ? { n: name } : {})
+      1: "n",
+      2: variable,
+      ...(name ? { 3: name } : {})
     }
   } else if (typeof variable === "boolean") {
     return {
-      "t": "b",
-      "d": variable,
-      ...(name ? { n: name } : {})
+      1: "b",
+      2: variable,
+      ...(name ? { 3: name } : {})
     }
   } else if (typeof variable === "object") {
     return {
-      "t": "o",
-      "d": Object.entries(variable).map(
-        ([n, d]) => serialise(d, n)
+      1: "o",
+      2: Object.entries(variable).map(
+        ([name, data]) => serialise(data, name)
       ),
-      ...(name ? { n: name } : {})
+      ...(name ? { 3: name } : {})
     }
   }
   throw ("Cannot mysterise data type");
 }
 
 function deserialise(variable: MysteryType) {
-  if (variable["t"] === "l") {
+  if (variable[1] === "l") {
     return null;
-  } else if (variable["t"] === "u") {
+  } else if (variable[1] === "u") {
     return undefined;
-  } else if (variable["t"] === "A") {
-    return variable["d"].map((d: MysteryType) => deserialise(d));
-  } else if (variable["t"] === "D") {
-    return new Date(variable["d"]);
-  } else if (variable["t"] === "R") {
-    const parts = /\/(.*)\/(.*)/.exec(variable["d"]);
+  } else if (variable[1] === "A") {
+    return variable[2].map((d: MysteryType) => deserialise(d));
+  } else if (variable[1] === "D") {
+    return new Date(variable[2]);
+  } else if (variable[1] === "R") {
+    const parts = /\/(.*)\/(.*)/.exec(variable[2]);
     if (parts) {
       return new RegExp(parts[1], parts[2]);
     } else {
       return null;
     }
-  } else if (variable["t"] === "B") {
-    return Buffer.from(variable["d"]);
-  } else if (variable["t"] === "s") {
-    return variable["d"];
-  } else if (variable["t"] === "n") {
-    return variable["d"];
-  } else if (variable["t"] === "b") {
-    return variable["d"];
-  } else if (variable["t"] === "o") {
+  } else if (variable[1] === "B") {
+    return Buffer.from(variable[2]);
+  } else if (variable[1] === "s") {
+    return variable[2];
+  } else if (variable[1] === "n") {
+    return variable[2];
+  } else if (variable[1] === "b") {
+    return variable[2];
+  } else if (variable[1] === "o") {
     let obj = {};
-    variable["d"].forEach((v: MysteryType) => {
+    variable[2].forEach((v: MysteryType) => {
       if (v !== null && v !== undefined) {
-        if (v["n"]) {
-          obj = { ...obj, [v["n"]]: deserialise(v) };
+        if (v[3]) {
+          obj = { ...obj, [v[3]]: deserialise(v) };
         }
       }
     })

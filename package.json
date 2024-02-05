@@ -14,19 +14,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Friedpanseller/mysterialise.git"
+    "url": "git+https://github.com/friedpanseller/mysterialise.git"
   },
   "keywords": [
     "serialise",
     "deserialise",
     "unserialise"
   ],
-  "author": "Friedpanseller",
+  "author": "friedpanseller",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Friedpanseller/mysterialise/issues"
+    "url": "https://github.com/friedpanseller/mysterialise/issues"
   },
-  "homepage": "https://github.com/Friedpanseller/mysterialise#readme",
+  "homepage": "https://github.com/friedpanseller/mysterialise#readme",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.16",

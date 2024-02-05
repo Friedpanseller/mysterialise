@@ -31,7 +31,7 @@ const obj = [{
         {
             name: "dog",
             sound: undefined,
-            video: Buffer([12,24,48])
+            video: Buffer.from([12,24,48])
         },
         null
     ]
@@ -39,11 +39,13 @@ const obj = [{
 
 // String version of the above object
 const seralised = mystify(obj);
+// {"type":"Array","data":[{"type":"obj...
 console.log(serialised);
 
 // Original object version of the above object
 const unserialised = clarify(serialised);
-console.log(obj[2].contents[1].name);
+// dog
+console.log(unserialised[2].contents[1].name);
 ```
 
 ## Install

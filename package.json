@@ -1,6 +1,6 @@
 {
   "name": "mysterialise",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "Serialise and De-Serialise JavaScript data types including \"Array\" | \"Date\" | \"RegExp\" | \"Buffer\" | \"string\" | \"number\" | \"boolean\" | \"object\" | \"null\" | \"undefined\" data types",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.16",
+    "@types/pako": "^2.0.3",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
@@ -37,6 +38,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "zlib": "^1.0.5"
+    "pako": "^2.1.0"
   }
 }

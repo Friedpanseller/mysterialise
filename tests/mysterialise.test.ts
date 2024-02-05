@@ -25,7 +25,7 @@ test("Buffers serialised and unserialised correctly", () => {
 });
 
 test("Strings serialised and unserialised correctly", () => {
-  const obj = "test";
+  const obj = "test😀";
   const result = JSON.stringify(clarify(mystify(obj))) === JSON.stringify(obj);
   expect(result).toBe(true);
 });
@@ -52,7 +52,7 @@ test("Objects serialises and unserialises correctly", () => {
   const obj = [{
     date: new Date(),
     regex: /^something/,
-    array: ['of', 747],
+    array: ['⟿⟿⟿of', 747],
     nest: {
       birds: {
         birdsnest: {
@@ -71,7 +71,79 @@ test("Objects serialises and unserialises correctly", () => {
         randomBuffer: Buffer.from([16, 32, 128]),
       }
     },
-    nothing: null
+    nothing: null,
+    nested: [{
+      date: new Date(),
+      regex: /^something/,
+      array: ['⟿⟿⟿of', 747],
+      nest: {
+        birds: {
+          birdsnest: {
+            eggs: 0
+          }
+        },
+        chickens: undefined
+      }
+    }, {
+      date: new Date(),
+      nest: {
+        birds: {
+          birdsnest: {
+            tarts: 0
+          },
+          randomBuffer: Buffer.from([16, 32, 128]),
+        }
+      },
+      nothing: null,
+      nested: [{
+        date: new Date(),
+        regex: /^something/,
+        array: ['⟿⟿⟿of', 747],
+        nest: {
+          birds: {
+            birdsnest: {
+              eggs: 0
+            }
+          },
+          chickens: undefined
+        }
+      }, {
+        date: new Date(),
+        nest: {
+          birds: {
+            birdsnest: {
+              tarts: 0
+            },
+            randomBuffer: Buffer.from([16, 32, 128]),
+          }
+        },
+        nothing: null,
+        nested: [{
+          date: new Date(),
+          regex: /^something/,
+          array: ['⟿⟿⟿of', 747],
+          nest: {
+            birds: {
+              birdsnest: {
+                eggs: 0
+              }
+            },
+            chickens: undefined
+          }
+        }, {
+          date: new Date(),
+          nest: {
+            birds: {
+              birdsnest: {
+                tarts: 0
+              },
+              randomBuffer: Buffer.from([16, 32, 128]),
+            }
+          },
+          nothing: null,
+        }]
+      }]
+    }]
   }];
   const result = JSON.stringify(clarify(mystify(obj))) === JSON.stringify(obj);
   expect(result).toBe(true);

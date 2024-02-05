@@ -7,4 +7,8 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
+  // Add this
+  esbuildOptions(options) {
+    options.external = ['zlib'];
+  },
 });

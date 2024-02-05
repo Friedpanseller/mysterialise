@@ -1,4 +1,4 @@
-import zlib = require('zlib');
+import * as pako from 'pako';
 
 export type VariableType = "Array" | "Date" | "RegExp" | "Buffer" | "string" | "number" | "boolean" | "object" | "null" | "undefined";
 
@@ -113,10 +113,30 @@ function deserialise(variable: MysteryType) {
   return;
 }
 
+function Uint8Array2String(u8a: Uint8Array) {
+  var hex = [];
+  for (var i = 0; i < u8a.length; i++) {
+    hex.push(u8a[i].toString(36));
+  }
+  return hex.join(",");
+}
+
+function String2Uint8Array(str: string) {
+  return str.split(",").map(s => parseInt(s, 36));
+}
+
 export function mystify(variable: any): string {
-  return zlib.deflateSync(JSON.stringify(serialise(variable, null))).toString("base64");
+  const serializedData = JSON.stringify(serialise(variable, null));
+  const compressedData = pako.deflate(serializedData, { raw: true });
+  const str = Uint8Array2String(compressedData);
+  return str;
 }
 
 export function clarify(variable: string) {
-  return deserialise(JSON.parse(zlib.inflateSync(Buffer.from(variable, "base64")).toString()));
+  const compressedData = String2Uint8Array(variable);
+  const decompressedData = pako.inflate(new Uint8Array(compressedData), {
+    raw: true,
+    to: "string",
+  });
+  return deserialise(JSON.parse(decompressedData));
 }

@@ -1,6 +1,6 @@
-type VariableType = "Array" | "Date" | "RegExp" | "Buffer" | "string" | "number" | "boolean" | "object" | "null" | "undefined";
+export type VariableType = "Array" | "Date" | "RegExp" | "Buffer" | "string" | "number" | "boolean" | "object" | "null" | "undefined";
 
-type MysteryType = {
+export type MysteryType = {
   "type": VariableType,
   "data": any,
   "name"?: string | null
@@ -115,6 +115,6 @@ export function mystify(variable: any): string {
   return JSON.stringify(serialise(variable, null));
 }
 
-export function clairfy(variable: string) {
+export function clarify(variable: string) {
   return deserialise(JSON.parse(variable));
 }

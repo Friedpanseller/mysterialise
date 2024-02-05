@@ -1,4 +1,4 @@
-const zlib = require('zlib');
+import zlib = require('zlib');
 
 export type VariableType = "Array" | "Date" | "RegExp" | "Buffer" | "string" | "number" | "boolean" | "object" | "null" | "undefined";
 

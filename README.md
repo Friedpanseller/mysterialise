@@ -2,11 +2,12 @@
 ### Mysterious Serialisation of JavaScript data
 Mysterialise will serialise a variety of NodeJS data types into a string to then deserialise later. This expands on the functionality of `JSON.stringify` as it does not handle `Buffer` and `Date` types very elegantly.
 
-#### For Example
-`JSON.parse(JSON.stringify(new Date()))` becomes `"2024-02-05T00:58:08.999Z"` instead of a `Date` object  
-`JSON.parse(JSON.stringify(Buffer.from([16,24,36])))` becomes `{ type: 'Buffer', data: [ 16, 24, 36 ] }` instead of a `Buffer` object  
+#### Issues with JSON Serialisation
+1. `JSON.parse(JSON.stringify(new Date()))` becomes `"2024-02-05T00:58:08.999Z"` instead of `Date` object  
+1. `JSON.parse(JSON.stringify(Buffer.from([16,24,36])))` becomes `{ type: 'Buffer', data: [ 16, 24, 36 ] }` instead of `Buffer` object  
 
-This supports nested objects and nested arrays, as well as the following types:
+#### Supported Data Types
+Mysterialise supports nested objects and nested arrays, as well as the following types:
 - `Array`
 - `Date`
 - `RegExp`

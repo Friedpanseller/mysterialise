@@ -11,63 +11,63 @@ function serialise(variable: any, name: string | null): MysteryType {
     return {
       "t": "null",
       "d": null,
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     };
   } else if (variable === undefined) {
     return {
       "t": "undefined",
       "d": undefined,
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     };
   } else if (variable.constructor === Array) {
     return {
       "t": "Array",
       "d": variable.map(v => serialise(v, null)),
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     };
   } else if (variable.constructor === Date) {
     return {
       "t": "Date",
       "d": variable.toISOString(),
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   } else if (variable.constructor === RegExp) {
     return {
       "t": "RegExp",
       "d": variable.toString(),
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   } else if (variable.constructor === Buffer) {
     return {
       "t": "Buffer",
       "d": JSON.parse(JSON.stringify(variable)).data,
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "string") {
     return {
       "t": "string",
       "d": variable,
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "number") {
     return {
       "t": "number",
       "d": variable,
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "boolean") {
     return {
       "t": "boolean",
       "d": variable,
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "object") {
     return {
       "t": "object",
       "d": Object.entries(variable).map(
-        ([name, data]) => serialise(data, name)
+        ([n, d]) => serialise(d, n)
       ),
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   }
   throw ("Cannot mysterise data type");

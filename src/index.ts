@@ -1,110 +1,129 @@
-import * as pako from 'pako';
-
-export type VariableType = "Array" | "Date" | "RegExp" | "Buffer" | "string" | "number" | "boolean" | "object" | "null" | "undefined";
+export type VariableType =
+  // Array
+  "A" |
+  // Date
+  "D" |
+  // RegExp 
+  "R" |
+  // Buffer
+  "B" |
+  // string
+  "s" |
+  // number
+  "n" |
+  // boolean
+  "b" |
+  // object
+  "o" |
+  // null
+  "l" |
+  // undefined 
+  "u"
+  ;
 
 export type MysteryType = {
-  "type": VariableType,
-  "data": any,
-  "name"?: string | null
+  "t": VariableType,
+  "d": any,
+  "n"?: string | null
 };
 
 function serialise(variable: any, name: string | null): MysteryType {
   if (variable === null) {
     return {
-      "type": "null",
-      "data": null,
-      ...(name ? { name: name } : {})
+      "t": "l",
+      "d": null,
+      ...(name ? { n: name } : {})
     };
   } else if (variable === undefined) {
     return {
-      "type": "undefined",
-      "data": undefined,
-      ...(name ? { name: name } : {})
+      "t": "u",
+      "d": undefined,
+      ...(name ? { n: name } : {})
     };
   } else if (variable.constructor === Array) {
     return {
-      "type": "Array",
-      "data": variable.map(v => serialise(v, null)),
-      ...(name ? { name: name } : {})
+      "t": "A",
+      "d": variable.map(v => serialise(v, null)),
+      ...(name ? { n: name } : {})
     };
   } else if (variable.constructor === Date) {
     return {
-      "type": "Date",
-      "data": variable.toISOString(),
-      ...(name ? { name: name } : {})
+      "t": "D",
+      "d": variable.toISOString(),
+      ...(name ? { n: name } : {})
     }
   } else if (variable.constructor === RegExp) {
     return {
-      "type": "RegExp",
-      "data": variable.toString(),
-      ...(name ? { name: name } : {})
+      "t": "R",
+      "d": variable.toString(),
+      ...(name ? { n: name } : {})
     }
   } else if (variable.constructor === Buffer) {
     return {
-      "type": "Buffer",
-      "data": JSON.parse(JSON.stringify(variable)).data,
-      ...(name ? { name: name } : {})
+      "t": "B",
+      "d": JSON.parse(JSON.stringify(variable)).data,
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "string") {
     return {
-      "type": "string",
-      "data": variable,
-      ...(name ? { name: name } : {})
+      "t": "s",
+      "d": variable,
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "number") {
     return {
-      "type": "number",
-      "data": variable,
-      ...(name ? { name: name } : {})
+      "t": "n",
+      "d": variable,
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "boolean") {
     return {
-      "type": "boolean",
-      "data": variable,
-      ...(name ? { name: name } : {})
+      "t": "b",
+      "d": variable,
+      ...(name ? { n: name } : {})
     }
   } else if (typeof variable === "object") {
     return {
-      "type": "object",
-      "data": Object.entries(variable).map(
-        ([name, data]) => serialise(data, name)
+      "t": "o",
+      "d": Object.entries(variable).map(
+        ([n, d]) => serialise(d, n)
       ),
-      ...(name ? { name: name } : {})
+      ...(name ? { n: name } : {})
     }
   }
   throw ("Cannot mysterise data type");
 }
 
 function deserialise(variable: MysteryType) {
-  if (variable["type"] === "null") {
+  if (variable["t"] === "l") {
     return null;
-  } else if (variable["type"] === "undefined") {
+  } else if (variable["t"] === "u") {
     return undefined;
-  } else if (variable["type"] === "Array") {
-    return variable["data"].map((d: MysteryType) => deserialise(d));
-  } else if (variable["type"] === "Date") {
-    return new Date(variable["data"]);
-  } else if (variable["type"] === "RegExp") {
-    const parts = /\/(.*)\/(.*)/.exec(variable["data"]);
+  } else if (variable["t"] === "A") {
+    return variable["d"].map((d: MysteryType) => deserialise(d));
+  } else if (variable["t"] === "D") {
+    return new Date(variable["d"]);
+  } else if (variable["t"] === "R") {
+    const parts = /\/(.*)\/(.*)/.exec(variable["d"]);
     if (parts) {
       return new RegExp(parts[1], parts[2]);
     } else {
       return null;
     }
-  } else if (variable["type"] === "Buffer") {
-    return Buffer.from(variable["data"]);
-  } else if (variable["type"] === "string") {
-    return variable["data"];
-  } else if (variable["type"] === "number") {
-    return variable["data"];
-  } else if (variable["type"] === "boolean") {
-    return variable["data"];
-  } else if (variable["type"] === "object") {
+  } else if (variable["t"] === "B") {
+    return Buffer.from(variable["d"]);
+  } else if (variable["t"] === "s") {
+    return variable["d"];
+  } else if (variable["t"] === "n") {
+    return variable["d"];
+  } else if (variable["t"] === "b") {
+    return variable["d"];
+  } else if (variable["t"] === "o") {
     let obj = {};
-    variable["data"].forEach((v: MysteryType) => {
+    variable["d"].forEach((v: MysteryType) => {
       if (v !== null && v !== undefined) {
-        if (v["name"]) {
-          obj = { ...obj, [v["name"]]: deserialise(v) };
+        if (v["n"]) {
+          obj = { ...obj, [v["n"]]: deserialise(v) };
         }
       }
     })
@@ -126,17 +145,9 @@ function String2Uint8Array(str: string) {
 }
 
 export function mystify(variable: any): string {
-  const serializedData = JSON.stringify(serialise(variable, null));
-  const compressedData = pako.deflate(serializedData, { raw: true });
-  const str = Uint8Array2String(compressedData);
-  return str;
+  return JSON.stringify(serialise(variable, null));
 }
 
 export function clarify(variable: string) {
-  const compressedData = String2Uint8Array(variable);
-  const decompressedData = pako.inflate(new Uint8Array(compressedData), {
-    raw: true,
-    to: "string",
-  });
-  return deserialise(JSON.parse(decompressedData));
+  return deserialise(JSON.parse(variable));
 }

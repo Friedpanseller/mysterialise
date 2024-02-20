@@ -42,7 +42,7 @@ const obj = [{
 
 // String version of the above object
 const seralised = mystify(obj);
-// {"type":"Array","data":[{"type":"obj...
+// {"t":1,"d":[{"t":"obj...
 console.log(serialised);
 
 // Original object version of the above object

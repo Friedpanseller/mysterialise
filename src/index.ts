@@ -138,6 +138,7 @@ export function mystify(variable: any): string {
   return JSON.stringify(serialise(variable, null));
 }
 
-export function clarify(variable: string) {
+export function clarify(variable: string | null | undefined) {
+  if (variable === null || variable === undefined) return;
   return deserialise(JSON.parse(variable));
 }
